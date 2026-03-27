@@ -55,7 +55,7 @@ def setup():
     GPIO.setup(LeftVibrator, GPIO.OUT)
     GPIO.setup(RightVibrator, GPIO.OUT)
 
-    # Đảm bảo vibrator tắt ngay từ đầu
+    # Ensure vibrators are off on startup
     GPIO.output(LeftVibrator, 0)
     GPIO.output(RightVibrator, 0)
 
@@ -100,33 +100,33 @@ def detect(chn):
 
 def getDistance(trig_pin, echo_pin):
     """
-    Đo khoảng cách bằng ultrasonic sensor.
-    Trả về khoảng cách tính bằng inches.
-    Nếu timeout (không có echo), trả về 999 để vibrator không bật.
+    Measure distance using an ultrasonic sensor.
+    Returns distance in inches.
+    If timeout occurs (no echo received), returns 999 so the vibrator stays off.
     """
-    # Đảm bảo trig ở mức thấp trước khi bắt đầu
+    # Ensure trig is LOW before starting
     GPIO.output(trig_pin, 0)
     time.sleep(0.000002)
 
-    # Gửi xung trigger 10 microseconds
+    # Send 10 microsecond trigger pulse
     GPIO.output(trig_pin, 1)
     time.sleep(0.00001)
     GPIO.output(trig_pin, 0)
 
-    # Chờ echo lên HIGH (timeout 50ms)
+    # Wait for echo to go HIGH (50ms timeout)
     timeout = time.time() + 0.05
     while GPIO.input(echo_pin) == 0:
         if time.time() > timeout:
             print(f"[WARN] Echo timeout (waiting HIGH) on pin {echo_pin}")
-            return 999  # Không có vật → không vibrate
+            return 999  # No object detected -> do not vibrate
     time1 = time.time()
 
-    # Chờ echo xuống LOW (timeout 50ms)
+    # Wait for echo to go LOW (50ms timeout)
     timeout = time.time() + 0.05
     while GPIO.input(echo_pin) == 1:
         if time.time() > timeout:
             print(f"[WARN] Echo timeout (waiting LOW) on pin {echo_pin}")
-            return 999  # Không có vật → không vibrate
+            return 999  # No object detected -> do not vibrate
     time2 = time.time()
 
     during = time2 - time1
@@ -140,22 +140,22 @@ def loop():
 
         print(f"Left: {lDis:.1f} in | Right: {rDis:.1f} in")
 
-        # Left vibrator: bật nếu có vật, tắt nếu không
+        # Left vibrator: turn on if object detected, off otherwise
         if lDis < DISTANCE_THRESHOLD:
             GPIO.output(LeftVibrator, 1)
         else:
             GPIO.output(LeftVibrator, 0)
 
-        # Right vibrator: bật nếu có vật, tắt nếu không
+        # Right vibrator: turn on if object detected, off otherwise
         if rDis < DISTANCE_THRESHOLD:
             GPIO.output(RightVibrator, 1)
         else:
             GPIO.output(RightVibrator, 0)
 
-        time.sleep(0.1)  # Tránh đọc quá nhanh, giảm nhiễu
+        time.sleep(0.1)  # Avoid reading too fast to reduce sensor noise
 
 def destroy():
-    GPIO.output(LeftVibrator, 0)   # Tắt vibrator trước khi cleanup
+    GPIO.output(LeftVibrator, 0)   # Turn off vibrators before cleanup
     GPIO.output(RightVibrator, 0)
     GPIO.cleanup()
 
