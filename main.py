@@ -22,6 +22,8 @@ RESOLUTION = "640x480"
 DISTANCE_THRESHOLD = 18  # inches
 
 def capture_image(path: str):
+    subprocess.run(["pkill", "-f", "fswebcam"], stderr=subprocess.DEVNULL)
+    time.sleep(0.5)
     subprocess.run(["fswebcam", "-r", RESOLUTION, "-S", "2", "--no-banner", path], check=True)
 
 def to_data_url(path: str) -> str:
@@ -59,7 +61,7 @@ def setup():
     GPIO.output(LeftVibrator, 0)
     GPIO.output(RightVibrator, 0)
 
-    GPIO.add_event_detect(PushButton, GPIO.BOTH, callback=detect, bouncetime=200)
+    GPIO.add_event_detect(PushButton, GPIO.FALLING, callback=detect, bouncetime=200)
 
 def detect(chn):
     try:
@@ -89,10 +91,7 @@ def detect(chn):
         ai_response = extract_text(resp)
         print(f"AI Response: {ai_response}")
 
-        from gtts import gTTS
-        tts = gTTS(ai_response, lang="en")
-        tts.save("response.mp3")
-        subprocess.run(["mpg123", "response.mp3"], check=True)
+        subprocess.run(["espeak", "-s", "130", "-p", "50", ai_response])
 
     except Exception as e:
         print("ERROR:", repr(e), file=sys.stderr)
