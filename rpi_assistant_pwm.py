@@ -96,7 +96,6 @@ def setup():
 
 
 def distance_to_duty(distance):
-    """Càng gần duty cycle càng cao (vibrate mạnh hơn)."""
     if distance >= DISTANCE_THRESHOLD:
         return 0
     duty = 100 - (distance / DISTANCE_THRESHOLD) * 90
