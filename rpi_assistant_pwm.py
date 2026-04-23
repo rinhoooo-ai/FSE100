@@ -110,11 +110,10 @@ def firstScan():
     data_url = to_data_url(IMAGE_PATH)
 
     prompt = (
-        "Reply with EXACTLY ONE short sentence (<= 15 words) "
-        "describing the main visible object. Do not read text. "
-        "The format should be 'there is a (insert color of object) "
-        "(insert object name) in front of you'. "
-        "If no object is found, reply with 'no object detected'."
+        "Describe what you see in the image in front of you in 1-2 short sentences. "
+        "Focus on the main subject, its color, shape, and surroundings if relevant. "
+        "Keep it natural and concise. "
+        "If the image is unclear or nothing is visible, reply with 'nothing visible'."
     )
 
     resp = client.responses.create(
