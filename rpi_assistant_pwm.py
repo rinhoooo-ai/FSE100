@@ -134,41 +134,41 @@ def firstScan():
     speak(ai_response)
 
 
-def secondScan():
-    global lastObjectDescription
+# def secondScan():
+#     global lastObjectDescription
 
-    capture_image(IMAGE_PATH)
-    data_url = to_data_url(IMAGE_PATH)
+#     capture_image(IMAGE_PATH)
+#     data_url = to_data_url(IMAGE_PATH)
 
-    prompt = (
-        f"The previous object description was: '{lastObjectDescription}'. "
-        "Look at this new image and answer where that object is now. "
-        "Reply with EXACTLY ONE short sentence (<= 15 words). "
-        "Do not use a list. Do not use bullet points. "
-        "Examples of acceptable style: "
-        "'the bottle is near the chair', "
-        "'the red bag is on the table', "
-        "'the object is farther ahead', "
-        "'object not found'. "
-        "If the object cannot be found, reply exactly with 'object not found'."
-    )
+#     prompt = (
+#         f"The previous object description was: '{lastObjectDescription}'. "
+#         "Look at this new image and answer where that object is now. "
+#         "Reply with EXACTLY ONE short sentence (<= 15 words). "
+#         "Do not use a list. Do not use bullet points. "
+#         "Examples of acceptable style: "
+#         "'the bottle is near the chair', "
+#         "'the red bag is on the table', "
+#         "'the object is farther ahead', "
+#         "'object not found'. "
+#         "If the object cannot be found, reply exactly with 'object not found'."
+#     )
 
-    resp = client.responses.create(
-        model=MODEL,
-        reasoning={"effort": "low"},
-        max_output_tokens=1024,
-        input=[{
-            "role": "user",
-            "content": [
-                {"type": "input_text", "text": prompt},
-                {"type": "input_image", "image_url": data_url}
-            ]
-        }],
-    )
+#     resp = client.responses.create(
+#         model=MODEL,
+#         reasoning={"effort": "low"},
+#         max_output_tokens=1024,
+#         input=[{
+#             "role": "user",
+#             "content": [
+#                 {"type": "input_text", "text": prompt},
+#                 {"type": "input_image", "image_url": data_url}
+#             ]
+#         }],
+#     )
 
-    ai_response = extract_text(resp)
-    print(f"AI Response (second scan): {ai_response}")
-    speak(ai_response)
+#     ai_response = extract_text(resp)
+#     print(f"AI Response (second scan): {ai_response}")
+#     speak(ai_response)
 
 
 def detect(chn):
