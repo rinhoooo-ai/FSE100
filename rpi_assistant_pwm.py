@@ -112,7 +112,6 @@ def firstScan():
         "Describe what you see in the image in front of you in 1-2 short sentences. "
         "Focus on the main subject, its color, shape, and surroundings if relevant. "
         "Keep it natural and concise. "
-        "If the image is unclear or nothing is visible, reply with 'nothing visible'."
     )
 
     resp = client.responses.create(
